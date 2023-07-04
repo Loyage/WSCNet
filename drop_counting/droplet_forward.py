@@ -101,10 +101,10 @@ if __name__ == '__main__':
     dropletData_test = dropletData(img_dir,img_name,transforms=transform)
 
     testloader = t.utils.data.DataLoader(dropletData_test,
-                                        batch_size=32,
+                                        batch_size=8,
                                         shuffle=False,\
                                             
-                                        num_workers=2)
+                                        num_workers=1)
     classes = ('background', 'empty', 'multiple', 'single')
 
     # img = dropletData_test[0]

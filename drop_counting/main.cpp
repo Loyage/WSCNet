@@ -3,8 +3,18 @@
 
 #include "dropProcessing.h"
 
-void main()
+void main(int argc, char* argv[])
 {
+	string imgAddress = "";//图像文件夹地址
+	cout << "Please input folder path:" << endl;
+	cin >> imgAddress;
+	if (imgAddress.back() != '\\')
+	{
+		imgAddress = imgAddress + "\\";
+		cout << imgAddress << endl;
+	}
+
+
 	const int kernel_size = 2;  //如果液滴比较大可以适当调大
 
 	const float min_radius = 8;  //最小半径，根据液滴大小进行修正，第二个调这个。
@@ -21,15 +31,14 @@ void main()
 
 	Parameter param(kernel_size, min_radius, max_radius, areaRate, findOverLap, parameter_adjust, visualization, wait_time);
 
-	string imgAddress = "E:\\share\\Droplet_Data\\0902\\3\\js\\"; //图像文件夹地址
 	string imgSaveFileName= "circledDropImg"; //图像结果保存地址
 	string dropInformationAddress = "dropInformation";//液滴信息保存地址
 
-	string command("mkdir -p "+imgAddress + imgSaveFileName);
-	string command2("mkdir -p " + imgAddress + dropInformationAddress);
+	string command("mkdir "+imgAddress + imgSaveFileName);
+	string command2("mkdir " + imgAddress + dropInformationAddress);
 
 	//cout << command << endl;
-	(command.c_str());
+	system(command.c_str());
 	system(command2.c_str());
 	
 	string img_extend ="*.bmp"; //图像后缀名，单张直接改成名字，批处理用*.bmp就可以了
@@ -151,8 +160,10 @@ void main()
 		//python sdk classification
 		cout << "Droplet Classification (taking a while)..." << endl;
 
+		// 调用python运行环境，运行python代码
 		const char* command = nullptr;
-		string str_cmd = "activate py3&&python droplet_forward.py " + imgAddress + " " + img_names[index];
+		string env_name = "torch";
+		string str_cmd = "activate " + env_name + "&&python droplet_forward.py " + imgAddress + " " + img_names[index];
 		command = str_cmd.c_str();
 		system(command);
 
