@@ -28,52 +28,6 @@ ScoreCircle::ScoreCircle()
 	;
 }
 
-///*******灰度分割******/
-////包括GMM和双高斯方差和最小化分割，前者速度太慢
-//void segmentationGMM(Mat &src)
-//{
-//	Mat pic;
-//	src.copyTo(pic);
-//	if (3 == pic.channels())
-//		cvtColor(pic, pic, CV_RGB2GRAY);
-//
-//	const int MAX_CLUSTERS = 2;//高斯个数
-//	int colorTab[] = { 0, 255, 127 };
-//	Mat data, labels;
-//
-//	for (int i = 0; i < pic.rows; i++)
-//	{
-//		uchar* point = pic.ptr<uchar>(i);
-//		for (int j = 0; j < pic.cols; j++)
-//		{
-//			Mat tmp = (Mat_<float>(1, 1) << point[j]);
-//			data.push_back(tmp);
-//		}
-//	}
-//	Mat probs;
-//
-//	Ptr<EM> em_model = EM::create();
-//	em_model->setClustersNumber(MAX_CLUSTERS);
-//	em_model->setCovarianceMatrixType(EM::COV_MAT_DIAGONAL);
-//	em_model->setTermCriteria(TermCriteria(TermCriteria::COUNT + TermCriteria::EPS, 100, 0.1));
-//	em_model->trainEM(data, noArray(), labels, probs);
-//
-//	int n = 0;
-//	//显示聚类结果，不同的类别用不同的颜色显示
-//	for (int i = 0; i < pic.rows; i++)
-//	{
-//		uchar* point = pic.ptr<uchar>(i);
-//		for (int j = 0; j < pic.cols; j++)
-//		{
-//			int clusterIdx = labels.at<int>(n++);
-//			point[j] = colorTab[clusterIdx];
-//		}
-//	}
-//	imshow("pic", pic);
-//	waitKey();
-//
-//}
-
 void findLightDrop(const Mat &src_gray, vector<CIRCLE> &final_circles, const Parameter &param, const int dev)
 {
 	int kernelSize = param.kernel_size;
@@ -310,12 +264,6 @@ void minVarSegmantation(const Mat &src_gray, GrayThreshold &output_gthd,const Pa
 			}
 		}
 	}
-
-	//finish = clock();
-	//duration = (float)(finish - start) / CLOCKS_PER_SEC;
-	//cout << endl;
-	//cout << "time: " << duration << endl;
-	//cout << endl;
 
 	if (count_high > 2 * count_middle)
 		grayThd_high = 254;
@@ -578,13 +526,6 @@ void findSingleDrop(const Mat &src_bw_img, ScoreCircle &scoreCircles, const Para
 
 			float score = rate_temp * single_score*area_countour / area_circle;
 			score = score < 1.0 ? score : 1.0;
-			//if (score > 1.0)
-			//{
-			//	cout << endl;
-			//	cout << "single: score is larger than 1.0" << endl;
-			//	cout << endl;
-			//	waitKey();
-			//}
 
 			scoreCircles.scores.push_back(score);
 		}
@@ -594,9 +535,6 @@ void findSingleDrop(const Mat &src_bw_img, ScoreCircle &scoreCircles, const Para
 
 void singleDropRefine(const Mat &src_img, CIRCLE oneCircle, CIRCLE &refineCircle)
 {
-	//destroyAllWindows();
-	//imshow("src_img", src_img);
-	//waitKey();
 
 	float old_intensity = 2.0;
 	float new_intensity = 1.0;
@@ -711,10 +649,6 @@ void findDroplet(Mat &drops_without_dark, Mat &mask, ScoreCircle	&sCircle, Mat &
 	Mat element_dilate = getStructuringElement(MORPH_ELLIPSE, Size(kernel_size, kernel_size));
 	Mat element_erode = getStructuringElement(MORPH_ELLIPSE, Size(kernel_size, kernel_size));
 
-	//equalizeHist(src_gray, src_gray);//直方图均衡化
-	//imshow("src", src_gray);
-	//waitKey();
-
 
 	if (3 == drops_without_dark.channels())
 		cvtColor(drops_without_dark, drops_without_dark, COLOR_RGB2GRAY);
@@ -747,9 +681,6 @@ void findDroplet(Mat &drops_without_dark, Mat &mask, ScoreCircle	&sCircle, Mat &
 
 	ScoreCircle tempCircles;
 	findDrops(drop_mask, tempCircles, param);
-
-	//cout << "Inseparable droplets finished!" << endl;
-
 
 	Mat drops_result;
 	drops_without_dark.copyTo(drops_result);
@@ -908,14 +839,6 @@ void findDrops(const Mat &dst_img, ScoreCircle &scoreCircles, const Parameter &p
 							score = score < 1.0 ? score : 1.0;
 
 
-							/*if (score > 1.0)
-							{
-								cout << endl;
-								cout << "initensity: score is larger than 1.0" << endl;
-								cout << endl;
-								waitKey();
-							}*/
-
 							valid_circles.push_back(pair<Point2f, float>(Point2f(j, i), kernel_radius));
 							score_index.push_back(score);
 							count++;
@@ -961,52 +884,6 @@ void findDrops(const Mat &dst_img, ScoreCircle &scoreCircles, const Parameter &p
 	}
 
 }
-
-//void NMS(const ScoreCircle sCircles, ScoreCircle &outputScoreCircles)
-//{
-//	vector<CIRCLE> valid_circles;
-//	valid_circles.assign(sCircles.circles.begin(), sCircles.circles.end());
-//	vector<float> valid_scores;
-//	valid_scores.assign(sCircles.scores.begin(), sCircles.scores.end());
-//
-//	vector<pair<float, int>> score_index; 
-//	for (int i = 0; i != valid_scores.size(); i++)
-//	{
-//		score_index.push_back(pair<float, int>(valid_scores[i],i));
-//	}
-//
-//	//score从大到小排序
-//	std::sort(score_index.begin(), score_index.end(), greater<pair<float, int>>());
-//
-//	/*非极大值抑制NMS，以两个圆iou作为iou*/
-//	vector<CIRCLE> nms_circles; //存nms后的circles
-//	vector<float> circle_scores; //存nms后的得分
-//	vector<int> delete_index;
-//
-//	for (int i_ter = 0; i_ter != score_index.size(); i_ter++)
-//	{
-//
-//		vector<int>::iterator id_iter = find(delete_index.begin(), delete_index.end(), score_index[i_ter].second);
-//		if (id_iter != delete_index.end())
-//			continue;
-//		pair<Point2f, float> circle_1 = valid_circles[score_index[i_ter].second];
-//		nms_circles.push_back(valid_circles[score_index[i_ter].second]);
-//		circle_scores.push_back(score_index[i_ter].first);
-//		for (int j_ter = i_ter + 1; j_ter != score_index.size(); j_ter++)
-//		{
-//			pair<Point2f, float> circle_2 = valid_circles[score_index[j_ter].second];
-//			float areaInt = intersectionArea(circle_1, circle_2);
-//			float area_1 = pi*circle_1.second*circle_1.second;
-//			float area_2 = pi*circle_2.second*circle_2.second;
-//			float areaUnion = area_1 + area_2 - areaInt;
-//			float IOU = areaInt / areaUnion;
-//			if (IOU > 0.2 || areaInt / area_1 > 0.2 || areaInt / area_2 > 0.2)
-//				delete_index.push_back(score_index[j_ter].second);
-//		}
-//	}
-//	outputScoreCircles.circles.assign(nms_circles.begin(), nms_circles.end());
-//	outputScoreCircles.scores.assign(circle_scores.begin(), circle_scores.end());
-//}
 
 void NMS(const ScoreCircle sCircles, ScoreCircle &outputScoreCircles, bool useArea)
 {
@@ -1056,62 +933,6 @@ void NMS(const ScoreCircle sCircles, ScoreCircle &outputScoreCircles, bool useAr
 	outputScoreCircles.circles.assign(nms_circles.begin(), nms_circles.end());
 	outputScoreCircles.scores.assign(circle_scores.begin(), circle_scores.end());
 }
-////假设液滴半径服从正态分布，以每个液滴的概率密度作为得分，有重叠的进行降分处理，最终过滤分数低于0.1的
-//void circleFilter(const ScoreCircle &drop_circles, ScoreCircle &outputCircles)
-//{
-//	//vector<float>radiuses;
-//	//for (int i = 0; i != drop_circles.size(); i++)
-//	//{
-//	//	radiuses.push_back(drop_circles[i].second);
-//	//}
-//	//float sum = std::accumulate(std::begin(radiuses), std::end(radiuses), 0.0);
-//	//float mean_cl = sum / radiuses.size(); //液滴均值
-//
-//	//float accum = 0.0;
-//	//std::for_each(std::begin(radiuses), std::end(radiuses), [&](const float d) {
-//	//	accum += (d - mean_cl)*(d - mean_cl); });
-//
-//	//float var_cl = accum / (drop_circles.size() - 1); //液滴方差
-//
-//	//vector<float> scores;
-//	//float score_max(0.0);
-//	//for (int i = 0; i != drop_circles.size(); i++)
-//	//{
-//	//	float score = 1 / sqrt(2 * pi*var_cl)*exp(-(drop_circles[i].second - mean_cl)*(drop_circles[i].second - mean_cl) / (2 * var_cl));
-//	//	scores.push_back(score);
-//	//	if (score > score_max)
-//	//		score_max = score;
-//	//}
-//	//for (int i = 0; i != drop_circles.size(); i++)
-//	//{
-//	//	scores[i] = scores[i] / score_max;
-//	//}
-//
-//	vector<int> count(drop_circles.circles.size(), 0);
-//	for (int i = 0; i != drop_circles.size(); i++)
-//	{
-//		CIRCLE circle_1 = drop_circles[i];
-//		for (int j = i + 1; j != drop_circles.size(); j++)
-//		{
-//			CIRCLE circle_2 = drop_circles[j];
-//			float areaInt = intersectionArea(circle_1, circle_2);
-//			float area_1 = pi*circle_1.second*circle_1.second;
-//			float area_2 = pi*circle_2.second*circle_2.second;
-//			float areaUnion = area_1 + area_2 - areaInt;
-//			float IOU = areaInt / areaUnion;
-//			if (areaInt / area_1 > 0.1 || areaInt / area_2>0.1)
-//			{
-//				count[i]++;
-//				count[j]++;
-//			}
-//		}
-//	}
-//	for (int i = 0; i != count.size(); i++)
-//	{
-//		if (count[i] < 2)
-//			outputCircles.push_back(drop_circles[i]);
-//	}
-//}
 
 //计算两个圆的相交面积
 float intersectionArea(pair<Point2f, float>circle_1, pair<Point2f, float>circle_2)
@@ -1330,8 +1151,4 @@ void fillHole(const Mat src_bw, Mat &dst_bw)
 	Temp(Range(1, src_bw.size().height + 1), Range(1, src_bw.size().width + 1)).copyTo(cutImg);
 
 	dst_bw = src_bw | (~cutImg);
-
-	//imshow("src_bw", src_bw);
-	//imshow("dst_bw", dst_bw);
-	//waitKey();
 }

@@ -8,10 +8,10 @@ void main(int argc, char* argv[])
 	string imgAddress = "";//图像文件夹地址
 	cout << "Please input folder path:" << endl;
 	cin >> imgAddress;
+	//补齐地址
 	if (imgAddress.back() != '\\')
 	{
 		imgAddress = imgAddress + "\\";
-		cout << imgAddress << endl;
 	}
 
 

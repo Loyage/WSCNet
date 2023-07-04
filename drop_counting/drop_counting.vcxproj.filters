@@ -18,10 +18,10 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="meanshift.cpp">
+    <ClCompile Include="dropProcessing.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="dropProcessing.cpp">
+    <ClCompile Include="meanshift.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
