@@ -5,29 +5,30 @@
 
 void main(int argc, char* argv[])
 {
-	string imgAddress = "";//图像文件夹地址
-	cout << "Please input folder path:" << endl;
-	cin >> imgAddress;
-	//补齐地址
-	if (imgAddress.back() != '\\')
-	{
-		imgAddress = imgAddress + "\\";
-	}
-
-
+	//可调参数
+	string env_name = "torch"; //使用的conda环境名称，可以修改为任意已安装好所有所需库的环境名称
 	const int kernel_size = 2;  //如果液滴比较大可以适当调大
 
-	const float min_radius = 8;  //最小半径，根据液滴大小进行修正，第二个调这个。
+	const float min_radius = 8;  //最小半径，根据液滴大小进行修正
 	const float max_radius = 50;  //最大半径，根据液滴大小进行修正
 
 	const float areaRate = 0.5;  //固定面积占比，不需要调
 	bool parameter_adjust = 0; //1表示显示中间结果，用于调参数；0表示不显示，用于批处理
 	bool visualization = 0; //用于中间结果的可视化
-	int wait_time = 1;//可视化等待时间
-	bool findOverLap = 1;//是否检测重叠液滴
+	int wait_time = 1; //可视化等待时间
+	bool findOverLap = 1; //是否检测重叠液滴
 
-	bool method = 0;//0表示暗场，1表示明场
-	int dev = 0;//明场下需要修正
+	bool method = 0; //0表示暗场，1表示明场
+	int dev = 0; //明场下的修正参数
+
+	//地址参数
+	string imgAddress = "";//图像文件夹地址
+	cout << "Please input folder path:" << endl;
+	cin >> imgAddress; //输入图像文件夹地址
+	if (imgAddress.back() != '\\') //图像文件夹地址补齐
+	{
+		imgAddress = imgAddress + "\\";
+	}
 
 	Parameter param(kernel_size, min_radius, max_radius, areaRate, findOverLap, parameter_adjust, visualization, wait_time);
 
@@ -37,12 +38,12 @@ void main(int argc, char* argv[])
 	string command("mkdir "+imgAddress + imgSaveFileName);
 	string command2("mkdir " + imgAddress + dropInformationAddress);
 
-	//cout << command << endl;
 	system(command.c_str());
 	system(command2.c_str());
 	
-	string img_extend ="*.bmp"; //图像后缀名，单张直接改成名字，批处理用*.bmp就可以了
+	string img_extend ="*.bmp"; //图像后缀名
 
+	//代码运行部分
 	vector<string> img_names;
 
 	struct _finddata_t fileinfo;
@@ -134,7 +135,7 @@ void main(int argc, char* argv[])
 		}
 		else
 		{
-			//findLightDrop(src_gray, final_circles.circles, param,dev);
+			findLightDrop(src_gray, final_circles.circles, param, dev);
 		}
 
 		Mat final_result;
@@ -162,7 +163,6 @@ void main(int argc, char* argv[])
 
 		// 调用python运行环境，运行python代码
 		const char* command = nullptr;
-		string env_name = "torch";
 		string str_cmd = "activate " + env_name + "&&python droplet_forward.py " + imgAddress + " " + img_names[index];
 		command = str_cmd.c_str();
 		system(command);

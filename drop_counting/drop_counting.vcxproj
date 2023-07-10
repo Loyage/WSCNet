@@ -180,7 +180,6 @@ opencv_videostab2410.lib;%(AdditionalDependencies)</AdditionalDependencies>
   <ItemGroup>
     <ClCompile Include="dropProcessing.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="meanshift.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dropProcessing.h" />
