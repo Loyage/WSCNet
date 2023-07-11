@@ -4,6 +4,14 @@
 
 该代码是为微液滴显微图像设计的一种识别算法，能够有效地分析该图像中的液滴数量、尺寸，并确定每个液滴中包含的细胞数量，从而提供了一种自动分析微液滴包裹实验的方法，提高了微液滴生成实验的结果分析效率。
 
+运行结果示例：
+
+![image-20230711143425309](https://github.com/Loyage/WSCNet/tree/master/imgs/circled_img.png)
+
+示例图片可以在[drop_counting/examples](https://github.com/Loyage/WSCNet/tree/master/drop_counting/examples)文件夹中找到。
+
+
+
 # 环境依赖
 
 >  本项目需要安装Anaconda/Miniconda以方便运行
@@ -23,9 +31,7 @@ numpy
 matplotlib
 ```
 
-# 资源准备
 
-【如何准备图像】
 
 # 运行步骤
 
@@ -37,7 +43,7 @@ matplotlib
 4. 运行`drop_counting.exe`文件，根据提示输入目标图片所在的文件夹路径；
 5. 回车，等待程序输出结果，程序会在目标文件夹下生成`dropInformation`和`circledDropImg`两个文件夹，分别包含标注结果和根据标注结果绘制的标注图像。
 
-![image-20230710211328933](https://github.com/Loyage/WSCNet/tree/master/drop_counting/examples/example.png)
+
 
 以下是使用源代码重新构建程序运行的方法：
 
@@ -48,19 +54,21 @@ matplotlib
 5. 根据需要调整项目参数，参考[章节-参数自定义](# 参数自定义)，可跳过；
 6. 在Visual Studio中执行代码，之后步骤同上。
 
+![image-20230710211328933](https://github.com/Loyage/WSCNet/tree/master/imgs/label_result.png)
+
 
 
 # 项目结构
 
 ```c++
-├─drop_counting.sln // Visual Studio解决方案文件
+├─drop_counting.sln //Visual Studio解决方案文件
 ├─drop_counting
-│  ├─examples // 示例图像及输出结果文件夹
+│  ├─examples //示例图像及输出结果文件夹
 │  ├─main.cpp
 │  ├─dropProcessing.cpp
 │  ├─dropProcessing.h
-│  ├─droplet_forward.py // 代码后续步骤需要调用的python文件
-│  └─drop_net-1.0.pt // 经训练得到的网络参数
+│  ├─droplet_forward.py //代码后续步骤需要调用的python文件
+│  └─drop_net-1.0.pt //经训练得到的网络参数
 ```
 
 
