@@ -6,7 +6,7 @@
 
 运行结果示例：
 
-![image-20230711143425309](https://github.com/Loyage/WSCNet/tree/master/imgs/circled_img.png)
+![image-20230711143425309](./imgs/circled_img.png)
 
 示例图片可以在[drop_counting/examples](https://github.com/Loyage/WSCNet/tree/master/drop_counting/examples)文件夹中找到。
 
@@ -54,7 +54,7 @@ matplotlib
 5. 根据需要调整项目参数，参考[章节-参数自定义](# 参数自定义)，可跳过；
 6. 在Visual Studio中执行代码，之后步骤同上。
 
-![image-20230710211328933](https://github.com/Loyage/WSCNet/tree/master/imgs/label_result.png)
+![image-20230710211328933](./imgs/label_result.png)
 
 
 
