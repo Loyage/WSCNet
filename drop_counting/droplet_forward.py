@@ -90,9 +90,6 @@ if __name__ == '__main__':
     img_dir = args.img_address
     img_name = args.img_name
 
-    # img_dir = 'C:\\Users\\Drop\\Desktop\\am\\js\\'
-    # img_name = '2.bmp'
-
     transform = transforms.Compose([
         transforms.ToTensor(), # 将图片(Image)转成Tensor，归一化至[0, 1]
         transforms.Normalize(mean=[.5, .5, .5], std=[.5, .5, .5]) # 标准化至[-1, 1]，规定均值和标准差

@@ -6,16 +6,13 @@
 void main(int argc, char* argv[])
 {
 	//可调参数
-	string env_name = "torch"; //使用的conda环境名称，可以修改为任意已安装好所有所需库的环境名称
-	const int kernel_size = 2;  //如果液滴比较大可以适当调大
+	string env_name = "torch"; //使用的conda环境名称
+	const int kernel_size = 2;  //膨胀和腐蚀使用的核大小，如果液滴尺寸较大可以适当提高
 
 	const float min_radius = 8;  //最小半径，根据液滴大小进行修正
 	const float max_radius = 50;  //最大半径，根据液滴大小进行修正
 
 	const float areaRate = 0.5;  //固定面积占比，不需要调
-	bool parameter_adjust = 0; //1表示显示中间结果，用于调参数；0表示不显示，用于批处理
-	bool visualization = 0; //用于中间结果的可视化
-	int wait_time = 1; //可视化等待时间
 	bool findOverLap = 1; //是否检测重叠液滴
 
 	bool method = 0; //0表示暗场，1表示明场
@@ -69,6 +66,10 @@ void main(int argc, char* argv[])
 	//system("pause");
 
 	vector<float> spend_time;
+
+	bool parameter_adjust = 0; //是否显示中间结果（用于调参数）
+	bool visualization = 0; //是否可视化中间结果
+	int wait_time = 1; //可视化等待时间
 
 	//记录时间
 	clock_t start_all, finish_all;

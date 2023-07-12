@@ -2,65 +2,56 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+# 项目简介
+
 该代码是为微液滴显微图像设计的一种识别算法，能够有效地分析该图像中的液滴数量、尺寸，并确定每个液滴中包含的细胞数量，从而提供了一种自动分析微液滴包裹实验的方法，提高了微液滴生成实验的结果分析效率。
 
 运行结果示例：
 
-![image-20230711143425309](./imgs/circled_img.png)
+![image-20230711143425309](./imgs/result_presentation.png)
 
-示例图片可以在[drop_counting/examples](https://github.com/Loyage/WSCNet/tree/master/drop_counting/examples)文件夹中找到。
+示例图片和其识别结果可以在[drop_counting/examples](https://github.com/Loyage/WSCNet/tree/master/drop_counting/examples)文件夹中找到。
 
+# 代码运行
 
+本代码使用了C++和Python两套编程语言，其中Python部分主要负责调用训练好的深度学习模型，实现对分割好的微液滴图像进行细胞计数，代码的主体部分用C++语言编写，包括对Python程序的调用。
 
-# 环境依赖
-
->  本项目需要安装Anaconda/Miniconda以方便运行
-
-C++：
+运行该代码前，需要安装Anaconda/Miniconda。以下是Python运行环境的搭建方式：
 
 ```
-opencv == 4.7.0
+conda create -n torch python=3.8
+conda activate torch
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
+pip install opencv-python numpy matplotlib
 ```
 
-Python：
+在C++部分，本代码提供了以下两种运行方式：
 
-```
-pytorch
-opencv-python
-numpy
-matplotlib
-```
+## 方式一：使用程序包直接运行代码
 
+该方式的优点是用户无需对C++语言和其环境配置有太多了解，运行起来相对方便。
 
+1.   [点击此处](https://github.com/Loyage/WSCNet/releases/download/v1.0.0/drop_counting-v1.0.0.zip)下载程序包，解压缩。
 
-# 运行步骤
+2.   运行其中的`drop_counting.exe`，输入需要处理的图像所在的目标文件夹地址。
+3.   回车，等待结果。
 
-我们提供了两种运行代码的方式，一种是直接使用打包好的程序运行，另一种是重新编译源码运行，前者相对方便，无需使用Visual Studio对C++代码进行环境配置，后者则可以自行调整部分参数。需注意，两种方法都需要自行安装conda并配置python运行环境。
+## 方式二：重新编译源码运行
 
+该方式要求用户安装Visual Studio，对C++有基本的了解，知道如何在VS中配置OpenCV环境。优点是可以在源码层面对代码做一定修改，对部分参数（如识别液滴的最小尺寸）进行自定义，这部分请参考[参数自定义](#参数自定义)。
 
+1.   下载项目源码。
 
-以下是直接使用打包好的程序运行的方法：
+     ```
+     git clone https://github.com/Loyage/WSCNet.git
+     ```
 
-1. 安装Anaconda/Miniconda，创建新的conda环境，命名为`torch`；
-2. 在该环境下安装pytorch，并安装其他依赖库；
-3. [点击此处](https://github.com/Loyage/WSCNet/releases/download/v1.0.0/drop_counting-v1.0.0.zip)下载最新的程序包，并解压缩；
-4. 运行`drop_counting.exe`文件，根据提示输入目标图片所在的文件夹路径；
-5. 回车，等待程序输出结果，程序会在目标文件夹下生成`dropInformation`和`circledDropImg`两个文件夹，分别包含标注结果和根据标注结果绘制的标注图像。
+2.   安装[Visual Studio](https://visualstudio.microsoft.com/vs/)，用其打开`drop_counting.sln`。
 
+3.   下载[OpenCV – 4.7.0](https://opencv.org/releases/)并安装，安装路径建议设置为`F:\software\opencv`，否则在Visual Studio中将OpenCV相关的配置项修改为对应的新地址。
 
-
-以下是使用源代码重新构建程序运行的方法：
-
-1. 安装Anaconda/Miniconda，创建新的conda环境，命名为`torch`；
-2. 在该环境下安装pytorch，并安装其他依赖库；
-3. 下载源码，解压缩，使用Visual Studio打开`drop_counting.sln`文件；
-4. 安装`opencv`，并在Visual Studio配置好对应的项目属性；
-5. 根据需要调整项目参数，参考[章节-参数自定义](# 参数自定义)，可跳过；
-6. 在Visual Studio中执行代码，之后步骤同上。
-
-![image-20230710211328933](./imgs/label_result.png)
-
-
+4.   在Visual Studio中点击开始执行，程序框出现后输入目标文件夹地址。
+5.   回车，等待结果。
 
 # 项目结构
 
@@ -71,32 +62,31 @@ matplotlib
 │  ├─main.cpp
 │  ├─dropProcessing.cpp
 │  ├─dropProcessing.h
-│  ├─droplet_forward.py //代码后续步骤需要调用的python文件
-│  └─drop_net-1.0.pt //经训练得到的网络参数
+│  ├─droplet_forward.py //代码Python部分
+│  └─drop_net-1.0.pt //训练所得神经网络模型参数
 ```
-
-
 
 # 参数自定义
 
 本项目针对不同环境提供了参数自定义功能，实验者可以根据具体情况调整部分参数，以达到最好的识别效果。
 
-该代码的可调参数均放在了`main.cpp`文件的开头，参数的含义均已注释。其中对实验结果有影响的参数如下：
+可调参数均放在了`main.cpp`文件的开头，参数的含义均已注释，如下：
 
 ```c++
-	string env_name = "torch"; //使用的conda环境名称，可以修改为任意已安装好所有所需库的环境名称
-	const int kernel_size = 2;  //如果液滴比较大可以适当调大
-
+	string env_name = "torch"; //使用的conda环境名称
+	const int kernel_size = 2;  //膨胀和腐蚀使用的核大小，如果液滴尺寸较大可以适当提高
 	const float min_radius = 8;  //最小半径，根据液滴大小进行修正
 	const float max_radius = 50;  //最大半径，根据液滴大小进行修正
-
 	const float areaRate = 0.5;  //固定面积占比，不需要调
-	bool parameter_adjust = 0; //1表示显示中间结果，用于调参数；0表示不显示，用于批处理
-	bool visualization = 0; //用于中间结果的可视化
-	int wait_time = 1; //可视化等待时间
 	bool findOverLap = 1; //是否检测重叠液滴
-
 	bool method = 0; //0表示暗场，1表示明场
 	int dev = 0; //明场下的修正参数
 ```
 
+# 深度学习模型结构与训练方式
+
+本代码使用到的深度学习模型属于CNN架构，模型具体参数可以在文件[drop_counting/droplet_forward.py](https://github.com/Loyage/WSCNet/tree/master/drop_counting/droplet_forward.py)中查看。
+
+我们通过收集了大量微流控液滴生物医学图像数据，并使用弱监督的方式进行数据标注，最后用这些数据进行模型训练，最终得到代码中使用的网络模型参数。
+
+在训练过程中，我们将匹配响应阈值σ、小常数γ和权值ω分别设置为0.98、0.001和1。采用ReLU作为整个网络的激活函数。批量大小设置为1024。学习率初始化为$10^{-4}$，并根据验证集的损失进行调整。
