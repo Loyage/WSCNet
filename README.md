@@ -37,7 +37,7 @@ The advantage of this method is that users do not need to know much about C++ la
 
 ## Method 2: Recompile the source code to run
 
-This method requires users to install Visual Studio, have a basic understanding of C++, know how to configure OpenCV environment in VS. The advantage is that you can make certain modifications to the code at the source level, and customize some parameters (such as identifying the minimum size of the droplet), which please refer to [Parameter customization](# Parameter customization).
+This method requires users to install Visual Studio, have a basic understanding of C++, know how to configure OpenCV environment in VS. The advantage is that you can make certain modifications to the code at the source level, and customize some parameters (such as identifying the minimum size of the droplet), which please refer to [Parameter customization](#Parameter customization).
 
 1.   Download the project source code.
 
@@ -45,7 +45,7 @@ This method requires users to install Visual Studio, have a basic understanding 
      git clone https://github.com/Loyage/WSCNet.git
      ```
 
-2.    Install Visual Studio (https://visualstudio.microsoft.com/vs/), with its open ` drop_counting.sln`.
+2.    Install Visual Studio (https://visualstudio.microsoft.com/vs/), with its open `drop_counting.sln`.
 
 3.   Download the [OpenCV - 4.7.0](https://opencv.org/releases/) and installation, the installation path set to ` F:\software\OpenCV `, Otherwise, modify the related configuration items to the corresponding new address in Visual Studio.
 
@@ -73,14 +73,14 @@ This project provides parameter customization function for different environment
 The tunable parameters are placed at the beginning of the `main.cpp` file and their meanings are commented, as follows:
 
 ```c++
-	string env_name = "torch"; //name of the conda environment
-	const int kernel_size = 2;  //kernel size of the dilation and erosion step, raise it if the droplet is large
-	const float min_radius = 8;  //minimum radius, corrected for drop size
-	const float max_radius = 50;  //maximum radius, corrected for drop size
-	const float areaRate = 0.5;  //fixed area ratio, no need to adjust
-	bool findOverLap = 1; //whether to detect overlapping droplets
-	bool method = 0; //0 for dark field images, 1 for bright field images
-	int dev = 0; //parameters fot modifying images under the bright field
+string env_name = "torch"; //name of the conda environment
+const int kernel_size = 2;  //kernel size of the dilation and erosion step, raise it if the droplet is large
+const float min_radius = 8;  //minimum radius, corrected for drop size
+const float max_radius = 50;  //maximum radius, corrected for drop size
+const float areaRate = 0.5;  //fixed area ratio, no need to adjust
+bool findOverLap = 1; //whether to detect overlapping droplets
+bool method = 0; //0 for dark field images, 1 for bright field images
+int dev = 0; //parameters fot modifying images under the bright field
 ```
 
 # Deep learning model structure and training methods
