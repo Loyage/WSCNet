@@ -1,10 +1,10 @@
-# WSCNet: Biomedical image recognition for cell encapsulated microfluidic droplets 
+# WSCNet：一种包裹细胞的微流控液滴的生物医学图像识别算法
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-This code is a biomedical image recognition algorithm designed for cell encapsulated microfluidic droplets, which can effectively analyze the number and size of droplets in the image, and determine the number of cells contained in each droplet, thus providing a method to automatically analyze the microdroplet wrapping experiment, and improving the analysis efficiency of the results of the microdroplet generation experiment.
+该代码是为微液滴显微图像设计的一种识别算法，能够有效地分析该图像中的液滴数量、尺寸，并确定每个液滴中包含的细胞数量，从而提供了一种自动分析微液滴包裹实验的方法，提高了微液滴生成实验的结果分析效率。
 
-Result show:
+运行结果示例：
 
 ![image-20230711143425309](./imgs/circled_img.png)
 
@@ -34,6 +34,10 @@ matplotlib
 
 
 # 运行步骤
+
+我们提供了两种运行代码的方式，一种是直接使用打包好的程序运行，另一种是重新编译源码运行，前者相对方便，无需使用Visual Studio对C++代码进行环境配置，后者则可以自行调整部分参数。需注意，两种方法都需要自行安装conda并配置python运行环境。
+
+
 
 以下是直接使用打包好的程序运行的方法：
 
