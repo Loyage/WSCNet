@@ -87,6 +87,6 @@ int dev = 0; //parameters fot modifying images under the bright field
 
 The deep learning model used in this code belongs to the CNN architecture, Model specific parameters can be found in [drop_counting/droplet_forward.py](https://github.com/Loyage/WSCNet/tree/master/drop_counting/droplet_forward.py).
 
-We collected a large number of microfluidic droplet biomedical image data, and used the weakly supervised method for data annotation, and finally used these data for model training, and finally obtained the network model parameters used in the code.
+We collected a large number of microfluidic droplet biomedical image data, and used the weakly supervised method for data annotation, and finally used these data for model training, and finally obtained the network model parameters used in the code. This program publishes data annotation results for all example images, which can be viewed and compared in [drop_counting/examples/manual_result](https://github.com/Loyage/WSCNet/tree/master/drop_counting/examples/manual_result).
 
-We set the matching response threshold σ, the small constant γ, and the weight ω to 0.98, 0.001 and 1, respectively. ReLU is adopted as the activation function in the whole network. The batch size is set to 1024. The learning rate is initialized with $10^{-4}$ and adjusted by the loss of the validation set.
+During training, we set the matching response threshold σ, the small constant γ, and the weight ω to 0.98, 0.001 and 1, respectively. ReLU is adopted as the activation function in the whole network. The batch size is set to 1024. The learning rate is initialized with $10^{-4}$ and adjusted by the loss of the validation set.

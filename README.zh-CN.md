@@ -73,20 +73,20 @@ pip install opencv-python numpy matplotlib
 可调参数均放在了`main.cpp`文件的开头，参数的含义均已注释，如下：
 
 ```c++
-	string env_name = "torch"; //使用的conda环境名称
-	const int kernel_size = 2;  //膨胀和腐蚀使用的核大小，如果液滴尺寸较大可以适当提高
-	const float min_radius = 8;  //最小半径，根据液滴大小进行修正
-	const float max_radius = 50;  //最大半径，根据液滴大小进行修正
-	const float areaRate = 0.5;  //固定面积占比，不需要调
-	bool findOverLap = 1; //是否检测重叠液滴
-	bool method = 0; //0表示暗场，1表示明场
-	int dev = 0; //明场下的修正参数
+string env_name = "torch"; //使用的conda环境名称
+const int kernel_size = 2;  //膨胀和腐蚀使用的核大小，如果液滴尺寸较大可以适当提高
+const float min_radius = 8;  //最小半径，根据液滴大小进行修正
+const float max_radius = 50;  //最大半径，根据液滴大小进行修正
+const float areaRate = 0.5;  //固定面积占比，不需要调
+bool findOverLap = 1; //是否检测重叠液滴
+bool method = 0; //0表示暗场，1表示明场
+int dev = 0; //明场下的修正参数
 ```
 
 # 深度学习模型结构与训练方式
 
 本代码使用到的深度学习模型属于CNN架构，模型具体参数可以在文件[drop_counting/droplet_forward.py](https://github.com/Loyage/WSCNet/tree/master/drop_counting/droplet_forward.py)中查看。
 
-我们通过收集了大量微流控液滴生物医学图像数据，并使用弱监督的方式进行数据标注，最后用这些数据进行模型训练，最终得到代码中使用的网络模型参数。
+我们通过收集了大量微流控液滴生物医学图像数据，并使用弱监督的方式进行数据标注，最后用这些数据进行模型训练，最终得到代码中使用的网络模型参数。本项目公布了所有示例图像的数据标注结果，可以在[drop_counting/examples/manual_result](https://github.com/Loyage/WSCNet/tree/master/drop_counting/examples/manual_result)中查看和对比。
 
 在训练过程中，我们将匹配响应阈值σ、小常数γ和权值ω分别设置为0.98、0.001和1。采用ReLU作为整个网络的激活函数。批量大小设置为1024。学习率初始化为$10^{-4}$，并根据验证集的损失进行调整。
