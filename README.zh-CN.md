@@ -31,7 +31,7 @@ pip install opencv-python numpy matplotlib
 
 该方式的优点是用户无需对C++语言和其环境配置有太多了解，运行起来相对方便。
 
-1.   [点击此处](https://github.com/Loyage/WSCNet/releases/download/v1.0.0/drop_counting-v1.0.0.zip)下载程序包，解压缩。
+1.   [点击此处](https://github.com/Loyage/WSCNet/releases/download/v1.0.1/drop_counting-v1.0.1.zip)下载程序包，解压缩。
 
 2.   运行其中的`drop_counting.exe`，输入需要处理的图像所在的目标文件夹地址。
 3.   回车，等待结果。
