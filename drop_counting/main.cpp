@@ -6,7 +6,7 @@
 void main(int argc, char* argv[])
 {
 	//可调参数
-	string env_name = "test"; //使用的conda环境名称
+	string env_name = "torch"; //使用的conda环境名称
 	const int kernel_size = 2;  //膨胀和腐蚀使用的核大小，如果液滴尺寸较大可以适当提高
 
 	const float min_radius = 8;  //最小半径，根据液滴大小进行修正
