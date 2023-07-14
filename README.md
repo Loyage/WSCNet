@@ -22,7 +22,7 @@ Before running this code, you need to install Anaconda/Miniconda. Here's how the
 conda create -n torch python=3.8
 conda activate torch
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
-pip install opencv-python numpy matplotlib
+pip install opencv-python
 ```
 
 In the C++ part, this code provides the following two ways to run:
@@ -32,7 +32,7 @@ In the C++ part, this code provides the following two ways to run:
 The advantage of this method is that users do not need to know much about C++ language and its environment configuration, so it is relatively convenient to run.
 
 1. [Click here](https://github.com/Loyage/WSCNet/releases/download/v1.0.1/drop_counting-v1.0.1.zip) to download the package and unzip it.
-2. Run `drop_counting.exe` and enter the destination folder address of the image that you want to process.
+2. Run `drop_counting.exe` and enter the destination **folder address** of the image that you want to process.
 3. Press enter and wait for the result.
 
 ## Method 2: Recompile the source code to run

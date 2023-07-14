@@ -22,7 +22,7 @@
 conda create -n torch python=3.8
 conda activate torch
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
-pip install opencv-python numpy matplotlib
+pip install opencv-python
 ```
 
 在C++部分，本代码提供了以下两种运行方式：

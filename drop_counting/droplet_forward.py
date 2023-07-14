@@ -2,7 +2,6 @@ from __future__ import print_function
 import torch as t
 import torchvision as tv
 import torchvision.transforms as transforms
-import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 from torch.utils import data
@@ -107,25 +106,23 @@ if __name__ == '__main__':
     # img = dropletData_test[0]
 
     #加载模型参数
-    device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
+    # device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
+    device = t.device("cpu")
 
     drop_model = Net()
     drop_model.load_state_dict(t.load('./drop_net-1.0.pt',map_location = device))
     drop_model.eval()
-
-    
-    # device = t.device("cpu")
-
-    # drop_model.to(device)
+    drop_model = drop_model.to(device)
 
     with t.no_grad():
         _predictions = []
-        for data in testloader:
-            outputs = drop_model(data)
+        for inputData in testloader:
+            inputData = inputData.to(device)
+            outputs = drop_model(inputData)
             scores,predicted = t.max(outputs,1)
 
-            np_scores = scores.numpy()
-            np_pres = predicted.numpy()
+            np_scores = scores.cpu().numpy()
+            np_pres = predicted.cpu().numpy()
 
             for i in range(len(np_pres)):
                 if np_pres[i] >= 2 and np_scores[i] < 0:
