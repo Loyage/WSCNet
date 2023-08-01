@@ -5,18 +5,22 @@
 
 void main(int argc, char* argv[])
 {
-	//可调参数
-	string env_name = "torch"; //使用的conda环境名称
-	const int kernel_size = 2;  //膨胀和腐蚀使用的核大小，如果液滴尺寸较大可以适当提高
+	// Adjustable parameters | 可调参数
+	bool is_bright_field = 0; // 0 for dark field image，1 for bright field image | 0-暗场图像，1-明场图像
+	string conda_env_name = "torch"; // name of the conda environment | 使用的conda环境名称
 
-	const float min_radius = 8;  //最小半径，根据液滴大小进行修正
-	const float max_radius = 50;  //最大半径，根据液滴大小进行修正
+	const float min_radius = 8;  // minimum radius of droplet identification | 识别液滴半径下限
+	const float max_radius = 50;  // maximum radius of droplet identification | 识别液滴半径上限
+	const int kernel_size = 2;  // kernel size for image dilation and erosion, depends on the clarity of the image | 图像腐蚀、膨胀的核大小，图像清晰度较高时适当调整
 
-	const float areaRate = 0.5;  //固定面积占比，不需要调
-	bool findOverLap = 1; //是否检测重叠液滴
+	bool findOverLap = 1; // whether to detect overlapping targets | 是否检测重叠液滴
 
-	bool method = 0; //0表示暗场，1表示明场
-	int dev = 0; //明场下的修正参数
+
+	// Other parameters (No changes recommended) | 其他参数（无需调整）
+	const float areaRate = 0.5;  //固定面积占比
+	bool parameter_adjust = 0; //是否显示中间结果（用于调参数）
+	bool visualization = 0; //是否可视化中间结果
+	int wait_time = 1; //可视化等待时间
 
 	//地址参数
 	string imgAddress = "";//图像文件夹地址
@@ -27,9 +31,6 @@ void main(int argc, char* argv[])
 		imgAddress = imgAddress + "\\";
 	}
 
-	bool parameter_adjust = 0; //是否显示中间结果（用于调参数）
-	bool visualization = 0; //是否可视化中间结果
-	int wait_time = 1; //可视化等待时间
 
 	Parameter param(kernel_size, min_radius, max_radius, areaRate, findOverLap, parameter_adjust, visualization, wait_time);
 
@@ -102,7 +103,7 @@ void main(int argc, char* argv[])
 		cvtColor(src_color, src_gray, COLOR_RGB2GRAY);
 		ScoreCircle final_circles;
 
-		if (!method)
+		if (!is_bright_field)
 		{
 			//1. 分割得到两个阈值，三个中心
 			cout << "Step 1: Running  image segmantation by minimizing weighted sum of variances ..." << endl;
@@ -140,7 +141,7 @@ void main(int argc, char* argv[])
 		}
 		else
 		{
-			findLightDrop(src_gray, final_circles.circles, param, dev);
+			//findLightDrop(src_gray, final_circles.circles, param, dev);
 		}
 
 		Mat final_result;
@@ -168,7 +169,7 @@ void main(int argc, char* argv[])
 
 		// 调用python运行环境，运行python代码
 		const char* command = nullptr;
-		string str_cmd = "activate " + env_name + "&&python droplet_forward.py " + imgAddress + " " + img_names[index];
+		string str_cmd = "activate " + conda_env_name + "&&python droplet_forward.py " + imgAddress + " " + img_names[index];
 		command = str_cmd.c_str();
 		system(command);
 
