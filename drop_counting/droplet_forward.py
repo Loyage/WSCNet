@@ -106,8 +106,8 @@ if __name__ == '__main__':
     # img = dropletData_test[0]
 
     #加载模型参数
-    # device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
-    device = t.device("cpu")
+    device = t.device("cuda:0" if t.cuda.is_available() else "cpu")
+    # device = t.device("cpu")
 
     drop_model = Net()
     drop_model.load_state_dict(t.load('./drop_net-1.0.pt',map_location = device))

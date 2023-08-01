@@ -42,29 +42,33 @@ void main(int argc, char* argv[])
 	system(command.c_str());
 	system(command2.c_str());
 	
-	string img_extend ="*.bmp"; //图像后缀名
+	vector<string> img_ext_vec {"bmp", "png", "jpg", "jpeg", "tif"}; // image file suffix 图像文件后缀
 
 	//代码运行部分
 	vector<string> img_names;
 
 	struct _finddata_t fileinfo;
 	long long handle;
-	handle = _findfirst((imgAddress + img_extend).data(), &fileinfo);
-	if (handle == -1)
+	handle = _findfirst((imgAddress + "*.*").c_str(), &fileinfo);
+	if (handle != -1)
+	{
+		do
+		{
+			string filename = fileinfo.name;
+			string ext = filename.substr(filename.find_last_of(".") + 1);
+			if (img_ext_vec.end() != find(img_ext_vec.begin(), img_ext_vec.end(), ext))
+			{
+				cout << filename << endl;
+				img_names.push_back(filename);
+			}
+
+		} while (_findnext(handle, &fileinfo) == 0); // 遍历下一个文件
+	}
+	if (img_names.empty())
 	{
 		cout << "\n fail to find images! \n" << endl;
 		system("pause");
 		return;
-	}
-	else
-	{
-		cout << fileinfo.name << endl;
-		img_names.push_back(fileinfo.name);
-	}
-	while (!_findnext(handle, &fileinfo))
-	{
-		cout << fileinfo.name << endl;
-		img_names.push_back(fileinfo.name);
 	}
 	_findclose(handle);
 	//system("pause");
@@ -76,7 +80,7 @@ void main(int argc, char* argv[])
 	float duration_all;
 	start_all = clock();
 
-#pragma omp parallel for //num_threads(6) //线程数，可修改，1~6
+//#pragma omp parallel for num_threads(4) //线程数，可修改，1~6
 	for (int index = 0; index < img_names.size(); index++)
 	{
 		string img_add = imgAddress + img_names[index];
