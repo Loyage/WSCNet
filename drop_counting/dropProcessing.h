@@ -102,3 +102,5 @@ void findLightDrop(const Mat &src_gray, vector<CIRCLE> &final_circles, const Par
 
 //¿Õ¶´Ìî³ä
 void fillHole(const Mat src_bw, Mat &dst_bw);
+
+void extractContoursBright(Mat& src_gray, vector<vector<Point>>& pCountour_all, int kernelSize, const double areaRate, const double min_area, const double max_area, bool parameter_adjust);

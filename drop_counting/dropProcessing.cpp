@@ -1152,3 +1152,56 @@ void fillHole(const Mat src_bw, Mat &dst_bw)
 
 	dst_bw = src_bw | (~cutImg);
 }
+
+//得到分割后的图像和单连通域（明场）
+void extractContoursBright(Mat& src_gray, vector<vector<Point>>& pCountour_all, int kernelSize, const double areaRate, const double min_area, const double max_area, bool parameter_adjust)
+{
+	Mat element_dilate = getStructuringElement(MORPH_ELLIPSE, Size(kernelSize, kernelSize));
+	Mat element_erode = getStructuringElement(MORPH_ELLIPSE, Size(kernelSize, kernelSize));
+	Mat bw_img;
+
+	adaptiveThreshold(src_gray, bw_img, 255, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY, 101, 0);//自适应二值化
+	erode(bw_img, bw_img, element_erode);  //腐蚀 
+	dilate(bw_img, bw_img, element_dilate); //膨胀 
+	if (parameter_adjust)
+	{
+		imshow("bw_img", bw_img);  //中间结果展示
+		waitKey();
+	}
+
+	Mat bw_img_copy;
+	bw_img.copyTo(bw_img_copy);
+
+	vector<vector<Point>> temp_countour;
+	findContours(bw_img_copy, temp_countour, RETR_LIST, CHAIN_APPROX_SIMPLE, Point(0, 0));
+
+	for (int i = 0; i < temp_countour.size(); i++)
+	{
+		double area = contourArea(temp_countour[i]);
+		if (area<min_area || area>max_area)
+			continue;
+
+		//轮廓rect
+		Rect roi_rect = boundingRect(temp_countour[i]) & Rect(0, 0, bw_img.size().width - 1, bw_img.size().height - 1);
+
+		//轮廓内部填充白色的roi
+		Mat zeros_img = Mat::zeros(bw_img.size(), bw_img.type());
+		drawContours(zeros_img, temp_countour, i, 255, -1);
+		Mat roi_countour = zeros_img(roi_rect);
+
+		//二值图roi
+		const Mat roi_src(bw_img, roi_rect);
+
+		Mat countour_src;
+		multiply(roi_countour, roi_src, countour_src);
+
+		//轮廓内部白色点数
+		int nonzeros = countNonZero(countour_src);
+
+		//轮廓内部白色点数与轮廓区域面积占比，避免出现黑色填充的轮廓或者白色圆环
+		if ((double)nonzeros / contourArea(temp_countour[i]) > areaRate)
+		{
+			pCountour_all.push_back(temp_countour[i]);
+		}
+	}
+}

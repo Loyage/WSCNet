@@ -32,7 +32,7 @@ In the C++ part, this code provides the following two ways to run:
 The advantage of this method is that users do not need to know much about C++ language and its environment configuration, so it is relatively convenient to run.
 
 1. [Click here](https://github.com/Loyage/WSCNet/releases/download/v1.0.1/drop_counting-v1.0.1.zip) to download the package and unzip it.
-2. Run `drop_counting.exe` and enter the destination **folder address** of the image that you want to process.
+2. Run `drop_counting_dark.exe` if your images were taken in the bright field, otherwise run  `drop_counting_bright.exe`. Enter the destination **folder address** of the image that you want to process.
 3. Press enter and wait for the result.
 
 ## Method 2: Recompile the source code to run
@@ -73,14 +73,12 @@ This project provides parameter customization function for different environment
 The tunable parameters are placed at the beginning of the `main.cpp` file and their meanings are commented, as follows:
 
 ```c++
-string env_name = "torch"; //name of the conda environment
-const int kernel_size = 2;  //kernel size of the dilation and erosion step, raise it if the droplet is large
-const float min_radius = 8;  //minimum radius, corrected for drop size
-const float max_radius = 50;  //maximum radius, corrected for drop size
-const float areaRate = 0.5;  //fixed area ratio, no need to adjust
-bool findOverLap = 1; //whether to detect overlapping droplets
-bool method = 0; //0 for dark field images, 1 for bright field images
-int dev = 0; //parameters fot modifying images under the bright field
+bool is_bright_field = 0; // 0 for dark field image，1 for bright field image
+string conda_env_name = "torch"; // name of the conda environment
+const float min_radius = 8;  // minimum radius of droplet identification
+const float max_radius = 80;  // maximum radius of droplet identification
+const int kernel_size = 3;  // kernel size for image dilation and erosion, depends on the clarity of the image
+bool findOverLap = 1; // whether to detect overlapping targetsenv_name = "torch"; 
 ```
 
 # Deep learning model structure and training methods

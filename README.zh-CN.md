@@ -33,7 +33,7 @@ pip install opencv-python
 
 1.   [点击此处](https://github.com/Loyage/WSCNet/releases/download/v1.0.1/drop_counting-v1.0.1.zip)下载程序包，解压缩。
 
-2.   运行其中的`drop_counting.exe`，输入需要处理的图像所在的目标文件夹地址。
+2.   如果你的图像是在暗场下采集的，运行`drop_counting_dark.exe`，否则运行`drop_counting_bright.exe`。接着输入需要处理的图像所在的目标文件夹地址。
 3.   回车，等待结果。
 
 ## 方式二：重新编译源码运行
@@ -73,14 +73,12 @@ pip install opencv-python
 可调参数均放在了`main.cpp`文件的开头，参数的含义均已注释，如下：
 
 ```c++
-string env_name = "torch"; //使用的conda环境名称
-const int kernel_size = 2;  //膨胀和腐蚀使用的核大小，如果液滴尺寸较大可以适当提高
-const float min_radius = 8;  //最小半径，根据液滴大小进行修正
-const float max_radius = 50;  //最大半径，根据液滴大小进行修正
-const float areaRate = 0.5;  //固定面积占比，不需要调
+bool is_bright_field = 0; //0-暗场图像，1-明场图像
+string conda_env_name = "torch"; //使用的conda环境名称
+const float min_radius = 8;  //识别液滴半径下限
+const float max_radius = 80;  //识别液滴半径上限
+const int kernel_size = 3;  //图像腐蚀、膨胀的核大小，图像清晰度较高时适当调整
 bool findOverLap = 1; //是否检测重叠液滴
-bool method = 0; //0表示暗场，1表示明场
-int dev = 0; //明场下的修正参数
 ```
 
 # 深度学习模型结构与训练方式
