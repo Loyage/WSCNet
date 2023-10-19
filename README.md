@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+**This project is no longer under maintenance. Please visit the new version of it: [WSCNet2](https://github.com/Loyage/WSCNet2).**
+
 # Introduction
 
 This code is a biomedical image recognition algorithm designed for cell encapsulated microfluidic droplets, which can effectively analyze the number and size of droplets in the image, and determine the number of cells contained in each droplet, thus providing a method to automatically analyze the microdroplet wrapping experiment, and improving the analysis efficiency of the results of the microdroplet generation experiment.
